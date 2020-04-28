@@ -1,0 +1,27 @@
+{
+    "name": "ucenter\/offline-user",
+    "description": "a",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "yuanhb",
+            "email": "1214846385@qq.com"
+        }
+    ],
+    "require": {
+        "ucenter/test": "^0.3.0",
+      "ext-json": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Xthk\\Ucenter\\offline\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Xthk\\Ucenter\\offline\\ServiceProvider"
+            ]
+        }
+    }
+}
