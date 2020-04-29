@@ -7,6 +7,7 @@
 
 namespace Xthk\Ucenter\offline;
 
+use Xthk\Ucenter\offline\Exceptions\CustomException;
 use Xthk\Ucenter\offline\Exceptions\HttpException;
 use Xthk\Ucenter\offline\Exceptions\InvalidArgumentException;
 use Xthk\Ucenter\offline\Support\Constants;
@@ -32,30 +33,25 @@ class OfflineUser
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/26 10:36
      */
-    public function registerByUserCenter($params, $type='app')
+    public function registerByUserCenter($params, $type = 'app')
     {
         if (!\in_array(\strtolower($type), ['app', 'admin'])) {
             throw new InvalidArgumentException('Invalid response format: '.$type);
         }
         #请求地址设置
-        switch ($type){
+        switch ($type) {
             case 'app' : //app端登录需要验证码
-                $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_REGISTER);
+                $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_REGISTER);
                 break;
             case 'admin': //后台登录不需要验证码
-                $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_REGISTER);
+                $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_REGISTER);
                 break;
         }
         #参数设置
         $this->connect->setInput($params);
         try {
-            $result = json_decode($this->connect->send(), true);
-            if(isset($result['status_code']) && $result['status_code'] === 400){
-                return false;
-            }
-            return $result['data'];
+            return $this->response($this->connect->send());
         } catch (\Exception $exception) {
-            $this->connect->updateLog(Constants::LOG_STATUS_FAILED);
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
@@ -76,23 +72,19 @@ class OfflineUser
             throw new InvalidArgumentException('Invalid response format: '.$type);
         }
         #请求地址设置
-        switch ($type){
+        switch ($type) {
             case 'pwd' :
-                $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_LOGIN_BY_PWD);
+                $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_LOGIN_BY_PWD);
                 break;
             case 'code':
-                $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_GET_USERINFO_BY_MOBILE);
+                $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_LOGIN_BY_MOBILE);
                 break;
         }
         #参数设置
         $this->connect->setInput($params);
         #发送请求
         try {
-            $result = json_decode($this->connect->send(), true);
-            if(isset($result['status_code']) && $result['status_code'] === 400){
-                return false;
-            }
-            return $result['data'];
+            return $this->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -109,16 +101,12 @@ class OfflineUser
      */
     public function logoutByUserCenter($params)
     {
-        $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_LOGOUT);
+        $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_LOGOUT);
         #参数设置
         $this->connect->setInput($params);
         #发送请求
         try {
-            $result = json_decode($this->connect->send(), true);
-            if(isset($result['status_code']) && $result['status_code'] === 400){
-                return false;
-            }
-            return $result['data'];
+            return $this->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -133,15 +121,12 @@ class OfflineUser
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/27 17:32
      */
-    public function resetPwdForUserCenter($params){
-        $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::RESET_PWD);
+    public function resetPwdForUserCenter($params)
+    {
+        $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::RESET_PWD);
         $this->connect->setInput($params);
         try {
-            $result = json_decode($this->connect->send(), true);
-            if(isset($result['status_code']) && $result['status_code'] === 400){
-                return false;
-            }
-            return $result['data'];
+            return $this->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -158,14 +143,10 @@ class OfflineUser
      */
     public function getStudentByUserCenter($params)
     {
-        $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::STUDENT_GET);
+        $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::STUDENT_GET);
         $this->connect->setInput($params);
         try {
-            $result = json_decode($this->connect->send(), true);
-            if(isset($result['status_code']) && $result['status_code'] === 400){
-                return false;
-            }
-            return $result['data'];
+            return $this->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -183,19 +164,19 @@ class OfflineUser
     public function userCenterCreateStudent($params)
     {
         $this->connect->setInput($params);
-        $student = $this->connect->getOfflineStudent();
-        if(!$student){ //新增学生前这个电话号没有学生，走注册
-            $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_REGISTER);
+        if (isset($params['user_id'])) {
+            $userId = $params['user_id'];
         } else {
-            $this->connect->setRequestUri('/api/student' . \Xthk\Ucenter\UriConfig::STUDENT_CREATE);
-            $this->connect->setUserId($student->user_id);
+            $userId = $this->connect->getUserIdByStudentPhone();
+        }
+        if (!$userId) { //新增学生前这个电话号没有学生，走注册
+            $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_REGISTER);
+        } else {
+            $this->connect->setRequestUri('/api/student'.\Xthk\Ucenter\UriConfig::STUDENT_CREATE);
+            $this->connect->setUserId($userId);
         }
         try {
-            $result = json_decode($this->connect->send(), true);
-            if(isset($result['status_code']) && $result['status_code'] === 400){
-                return false;
-            }
-            return $result['data'];
+            return $this->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -211,17 +192,13 @@ class OfflineUser
      */
     public function userCenterUpdateStudent($params)
     {
-        if(isset($params['phone'])){
+        if (isset($params['phone'])) {
             unset($params['phone']);
         }
-        $this->connect->setRequestUri('/api/student' . \Xthk\Ucenter\UriConfig::STUDENT_UPDATE);
+        $this->connect->setRequestUri('/api/student'.\Xthk\Ucenter\UriConfig::STUDENT_UPDATE);
         $this->connect->setInput($params);
         try {
-            $result = json_decode($this->connect->send(), true);
-            if(isset($result['status_code']) && $result['status_code'] === 400){
-                return false;
-            }
-            return $result['data'];
+            return $this->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -236,15 +213,12 @@ class OfflineUser
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/27 19:10
      */
-    public function sendSmsCodeByUserCenter($params){
-        $this->connect->setRequestUri('/api/user'. \Xthk\Ucenter\UriConfig::USER_SEND_SMS_CODE);
+    public function sendSmsCodeByUserCenter($params)
+    {
+        $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_SEND_SMS_CODE);
         $this->connect->setInput($params);
         try {
-            $result = json_decode($this->connect->send(), true);
-            if(isset($result['status_code']) && $result['status_code'] === 400){
-                return false;
-            }
-            return $result['data'];
+            return $this->response($this->connect->send(), 'bool');
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -259,23 +233,38 @@ class OfflineUser
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/27 19:54
      */
-    public function refreshToken($params){
-        if(!isset($params['user_access_token'])){
+    public function refreshToken($params)
+    {
+        if (!isset($params['user_access_token'])) {
             throw new InvalidArgumentException('参数缺失');
         }
         $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::USER_REFRESH_TOKEN);
         $this->connect->setUserAccessToken($params['user_access_token']);
         try {
-            $result = json_decode($this->connect->send(), true);
-            if(isset($result['status_code']) && $result['status_code'] === 400){
-                return false;
-            }
-            return $result['data'];
+            return $this->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
+    /**
+     * 判断用户是否已注册
+     * @param $params
+     * @return bool|mixed
+     * @throws HttpException
+     * @throws InvalidArgumentException
+     * @author:yuanHb  2020/4/29 0:23
+     */
+    public function isRegisterByUserCenter($params)
+    {
+        $this->connect->setRequestUri('/api/userinfo'.\Xthk\Ucenter\UriConfig::USER_GET_USERINFO_BY_MOBILE);
+        $this->connect->setInput($params);
+        try {
+            return $this->response($this->connect->send(), 'bool');
+        } catch (\Exception $exception) {
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
 
     /**
      * 旧密码修改密码
@@ -285,18 +274,28 @@ class OfflineUser
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/29 0:23
      */
-    public function changeByPwdByUserCenter($params){
-        $this->connect->setRequestUri('/api/userinfo' . \Xthk\Ucenter\UriConfig::CHANGE_BY_PWD);
+    public function changeByPwdByUserCenter($params)
+    {
+        $this->connect->setRequestUri('/api/userinfo'.\Xthk\Ucenter\UriConfig::CHANGE_BY_PWD);
         $this->connect->setInput($params);
         try {
-            $result = json_decode($this->connect->send(), true);
-            if(isset($result['status_code']) && $result['status_code'] === 400){
-                return false;
-            }
-            return $result['data'];
+            return $this->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
+    }
+
+    /**
+     * 拼接token
+     * @param $userCenterToken
+     * @param $appToken
+     * @return string
+     * @author:yuanHb  2020/4/29 21:18
+     */
+    public function getUserToken($userCenterToken, $appToken)
+    {
+
+        return config('ucenter.config.app_name').'-'.$userCenterToken['user_access_token'].'-'.$appToken;
     }
 
     /**
@@ -307,12 +306,42 @@ class OfflineUser
      */
     public function userCenterStudentUpdateByNsq($params)
     {
-        try{
+        try {
             $nsq = $this->connect->getNsqService();
-            $nsq::PubCommonMessage(config('ucenter.nsq.topic'), config('ucenter.nsq.student_update'), 'POST', ["params" => $params]);
-        }catch (\Exception $exception){
+            $nsq::PubCommonMessage(config('ucenter.nsq.topic'), config('ucenter.nsq.student_update'), 'POST',
+                ["params" => $params]);
+        } catch (\Exception $exception) {
             return false;
         }
         return true;
+    }
+
+
+    /**
+     * 返回
+     * @param $result
+     * @param  string  $type
+     * @return array|bool
+     * @throws CustomException
+     * @author:yuanHb  2020/4/29 22:23
+     */
+    protected function response($result, $type = 'array')
+    {
+        $result = json_decode($result, true);
+        if (!isset($result['status_code'])) {
+            return false;
+        }
+        if ($result['status_code'] === 400) {
+            throw new CustomException($result['message']);
+        }
+        if ($result['status_code'] === 200) {
+            switch ($type) {
+                case 'bool':
+                    return true;
+                case  'array':
+                    return (array) $result['data'];
+            }
+        }
+        return false;
     }
 }

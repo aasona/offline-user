@@ -133,4 +133,17 @@ class UserCenterConnect extends OperateUcenter
         return $this->getStudentModel()->where('phone', $this->params['mobile'])->first();
     }
 
+
+    /**
+     * 通过学生电话返回用户id
+     * @author:yuanHb  2020/4/29 21:43
+     */
+    public function getUserIdByStudentPhone(){
+        $student = $this->getStudentModel()->where('phone', $this->params['mobile'])->first();
+        if($student){
+            return $student->user_id;
+        } else {
+            return null;
+        }
+    }
 }
