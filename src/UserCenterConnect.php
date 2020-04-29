@@ -9,6 +9,7 @@
 namespace Xthk\Ucenter\offline;
 
 
+use Xthk\Ucenter\offline\Exceptions\CustomException;
 use Xthk\Ucenter\offline\Exceptions\Exception;
 use Xthk\Ucenter\offline\Exceptions\InvalidArgumentException;
 use Xthk\Ucenter\offline\Support\Constants;
@@ -56,7 +57,7 @@ class UserCenterConnect extends OperateUcenter
             $this->params[$key] = $this->input->get($configParam);
         }
         $this->params = array_filter($this->params);
-        //不合法参数判断
+        //城市id转换
         $this->cityMap();
     }
 
@@ -125,16 +126,6 @@ class UserCenterConnect extends OperateUcenter
     }
 
     /**
-     * 获取线下学生
-     * @author:yuanHb  2020/4/28 9:52
-     */
-    public function getOfflineStudent()
-    {
-        return $this->getStudentModel()->where('phone', $this->params['mobile'])->first();
-    }
-
-
-    /**
      * 通过学生电话返回用户id
      * @author:yuanHb  2020/4/29 21:43
      */
@@ -145,5 +136,33 @@ class UserCenterConnect extends OperateUcenter
         } else {
             return null;
         }
+    }
+
+    /**
+     * 返回组装
+     * @param $result
+     * @param  string  $type
+     * @return array|bool
+     * @throws CustomException
+     * @author:yuanHb  2020/4/29 22:23
+     */
+    public function response($result, $type = 'array')
+    {
+        $result = json_decode($result, true);
+        if (!isset($result['status_code'])) {
+            return false;
+        }
+        if ($result['status_code'] === 400) {
+            throw new CustomException($result['message']);
+        }
+        if ($result['status_code'] === 200) {
+            switch ($type) {
+                case 'bool':
+                    return true;
+                case 'array':
+                    return (array) $result['data'];
+            }
+        }
+        return false;
     }
 }

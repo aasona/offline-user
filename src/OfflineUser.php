@@ -7,10 +7,8 @@
 
 namespace Xthk\Ucenter\offline;
 
-use Xthk\Ucenter\offline\Exceptions\CustomException;
 use Xthk\Ucenter\offline\Exceptions\HttpException;
 use Xthk\Ucenter\offline\Exceptions\InvalidArgumentException;
-use Xthk\Ucenter\offline\Support\Constants;
 
 class OfflineUser
 {
@@ -50,7 +48,7 @@ class OfflineUser
         #参数设置
         $this->connect->setInput($params);
         try {
-            return $this->response($this->connect->send());
+            return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -84,7 +82,7 @@ class OfflineUser
         $this->connect->setInput($params);
         #发送请求
         try {
-            return $this->response($this->connect->send());
+            return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -106,7 +104,7 @@ class OfflineUser
         $this->connect->setInput($params);
         #发送请求
         try {
-            return $this->response($this->connect->send());
+            return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -126,7 +124,7 @@ class OfflineUser
         $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::RESET_PWD);
         $this->connect->setInput($params);
         try {
-            return $this->response($this->connect->send());
+            return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -146,7 +144,7 @@ class OfflineUser
         $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::STUDENT_GET);
         $this->connect->setInput($params);
         try {
-            return $this->response($this->connect->send());
+            return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -176,7 +174,7 @@ class OfflineUser
             $this->connect->setUserId($userId);
         }
         try {
-            return $this->response($this->connect->send());
+            return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -198,7 +196,7 @@ class OfflineUser
         $this->connect->setRequestUri('/api/student'.\Xthk\Ucenter\UriConfig::STUDENT_UPDATE);
         $this->connect->setInput($params);
         try {
-            return $this->response($this->connect->send());
+            return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -218,7 +216,7 @@ class OfflineUser
         $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_SEND_SMS_CODE);
         $this->connect->setInput($params);
         try {
-            return $this->response($this->connect->send(), 'bool');
+            return $this->connect->response($this->connect->send(), 'bool');
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -241,7 +239,7 @@ class OfflineUser
         $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::USER_REFRESH_TOKEN);
         $this->connect->setUserAccessToken($params['user_access_token']);
         try {
-            return $this->response($this->connect->send());
+            return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -260,7 +258,7 @@ class OfflineUser
         $this->connect->setRequestUri('/api/userinfo'.\Xthk\Ucenter\UriConfig::USER_GET_USERINFO_BY_MOBILE);
         $this->connect->setInput($params);
         try {
-            return $this->response($this->connect->send(), 'bool');
+            return $this->connect->response($this->connect->send(), 'bool');
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -279,7 +277,7 @@ class OfflineUser
         $this->connect->setRequestUri('/api/userinfo'.\Xthk\Ucenter\UriConfig::CHANGE_BY_PWD);
         $this->connect->setInput($params);
         try {
-            return $this->response($this->connect->send());
+            return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -314,34 +312,5 @@ class OfflineUser
             return false;
         }
         return true;
-    }
-
-
-    /**
-     * 返回
-     * @param $result
-     * @param  string  $type
-     * @return array|bool
-     * @throws CustomException
-     * @author:yuanHb  2020/4/29 22:23
-     */
-    protected function response($result, $type = 'array')
-    {
-        $result = json_decode($result, true);
-        if (!isset($result['status_code'])) {
-            return false;
-        }
-        if ($result['status_code'] === 400) {
-            throw new CustomException($result['message']);
-        }
-        if ($result['status_code'] === 200) {
-            switch ($type) {
-                case 'bool':
-                    return true;
-                case  'array':
-                    return (array) $result['data'];
-            }
-        }
-        return false;
     }
 }
