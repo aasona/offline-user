@@ -41,7 +41,7 @@ class OfflineUser
             if(isset($result['status_code']) && $result['status_code'] === 400){
                 return false;
             }
-            return $result;
+            return $result['data'];
         } catch (\Exception $exception) {
             $this->connect->updateLog(Constants::LOG_STATUS_FAILED);
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
@@ -80,7 +80,7 @@ class OfflineUser
             if(isset($result['status_code']) && $result['status_code'] === 400){
                 return false;
             }
-            return $result;
+            return $result['data'];
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -106,7 +106,7 @@ class OfflineUser
             if(isset($result['status_code']) && $result['status_code'] === 400){
                 return false;
             }
-            return $result;
+            return $result['data'];
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -129,7 +129,7 @@ class OfflineUser
             if(isset($result['status_code']) && $result['status_code'] === 400){
                 return false;
             }
-            return $result;
+            return $result['data'];
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -153,7 +153,7 @@ class OfflineUser
             if(isset($result['status_code']) && $result['status_code'] === 400){
                 return false;
             }
-            return $result;
+            return $result['data'];
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -183,7 +183,7 @@ class OfflineUser
             if(isset($result['status_code']) && $result['status_code'] === 400){
                 return false;
             }
-            return $result;
+            return $result['data'];
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -209,7 +209,7 @@ class OfflineUser
             if(isset($result['status_code']) && $result['status_code'] === 400){
                 return false;
             }
-            return $result;
+            return $result['data'];
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -232,7 +232,7 @@ class OfflineUser
             if(isset($result['status_code']) && $result['status_code'] === 400){
                 return false;
             }
-            return $result;
+            return $result['data'];
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -258,12 +258,34 @@ class OfflineUser
             if(isset($result['status_code']) && $result['status_code'] === 400){
                 return false;
             }
-            return $result;
+            return $result['data'];
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
+
+    /**
+     * 旧密码修改密码
+     * @param $params
+     * @return bool|mixed
+     * @throws HttpException
+     * @throws InvalidArgumentException
+     * @author:yuanHb  2020/4/29 0:23
+     */
+    public function changeByPwdByUserCenter($params){
+        $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::CHANGE_BY_PWD);
+        $this->connect->setInput($params);
+        try {
+            $result = json_decode($this->connect->send(), true);
+            if(isset($result['status_code']) && $result['status_code'] === 400){
+                return false;
+            }
+            return $result['data'];
+        } catch (\Exception $exception) {
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
 
     /**
      * 用户信息更新分发
