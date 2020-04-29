@@ -25,15 +25,27 @@ class OfflineUser
     /**
      * 注册
      * @param $params
+     * @param  string  $type
      * @return string
-     * @throws HttpException
      * @throws Exceptions\Exception
+     * @throws HttpException
+     * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/26 10:36
      */
-    public function registerByUserCenter($params)
+    public function registerByUserCenter($params, $type='app')
     {
+        if (!\in_array(\strtolower($type), ['app', 'admin'])) {
+            throw new InvalidArgumentException('Invalid response format: '.$type);
+        }
         #请求地址设置
-        $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::USER_REGISTER);
+        switch ($type){
+            case 'app' : //app端登录需要验证码
+                $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_REGISTER);
+                break;
+            case 'admin': //后台登录不需要验证码
+                $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_REGISTER);
+                break;
+        }
         #参数设置
         $this->connect->setInput($params);
         try {
@@ -66,10 +78,10 @@ class OfflineUser
         #请求地址设置
         switch ($type){
             case 'pwd' :
-                $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::USER_LOGIN_BY_PWD);
+                $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_LOGIN_BY_PWD);
                 break;
             case 'code':
-                $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::USER_GET_USERINFO_BY_MOBILE);
+                $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_GET_USERINFO_BY_MOBILE);
                 break;
         }
         #参数设置
@@ -97,7 +109,7 @@ class OfflineUser
      */
     public function logoutByUserCenter($params)
     {
-        $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::USER_LOGOUT);
+        $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_LOGOUT);
         #参数设置
         $this->connect->setInput($params);
         #发送请求
@@ -122,7 +134,7 @@ class OfflineUser
      * @author:yuanHb  2020/4/27 17:32
      */
     public function resetPwdForUserCenter($params){
-        $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::RESET_PWD);
+        $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::RESET_PWD);
         $this->connect->setInput($params);
         try {
             $result = json_decode($this->connect->send(), true);
@@ -146,7 +158,7 @@ class OfflineUser
      */
     public function getStudentByUserCenter($params)
     {
-        $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::STUDENT_GET);
+        $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::STUDENT_GET);
         $this->connect->setInput($params);
         try {
             $result = json_decode($this->connect->send(), true);
@@ -173,9 +185,9 @@ class OfflineUser
         $this->connect->setInput($params);
         $student = $this->connect->getOfflineStudent();
         if(!$student){ //新增学生前这个电话号没有学生，走注册
-            $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::USER_REGISTER);
+            $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_REGISTER);
         } else {
-            $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::STUDENT_CREATE);
+            $this->connect->setRequestUri('/api/student' . \Xthk\Ucenter\UriConfig::STUDENT_CREATE);
             $this->connect->setUserId($student->user_id);
         }
         try {
@@ -202,7 +214,7 @@ class OfflineUser
         if(isset($params['phone'])){
             unset($params['phone']);
         }
-        $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::STUDENT_UPDATE);
+        $this->connect->setRequestUri('/api/student' . \Xthk\Ucenter\UriConfig::STUDENT_UPDATE);
         $this->connect->setInput($params);
         try {
             $result = json_decode($this->connect->send(), true);
@@ -225,7 +237,7 @@ class OfflineUser
      * @author:yuanHb  2020/4/27 19:10
      */
     public function sendSmsCodeByUserCenter($params){
-        $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::USER_SEND_SMS_CODE);
+        $this->connect->setRequestUri('/api/user'. \Xthk\Ucenter\UriConfig::USER_SEND_SMS_CODE);
         $this->connect->setInput($params);
         try {
             $result = json_decode($this->connect->send(), true);
@@ -274,7 +286,7 @@ class OfflineUser
      * @author:yuanHb  2020/4/29 0:23
      */
     public function changeByPwdByUserCenter($params){
-        $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::CHANGE_BY_PWD);
+        $this->connect->setRequestUri('/api/userinfo' . \Xthk\Ucenter\UriConfig::CHANGE_BY_PWD);
         $this->connect->setInput($params);
         try {
             $result = json_decode($this->connect->send(), true);
