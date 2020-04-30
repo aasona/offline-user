@@ -47,6 +47,8 @@ class OfflineUser
         }
         #参数设置
         $this->connect->setInput($params);
+        $this->connect->setClientIp();
+        $this->connect->setRegisterIp($this->connect->getClientIp());
         try {
             return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
@@ -80,6 +82,8 @@ class OfflineUser
         }
         #参数设置
         $this->connect->setInput($params);
+        $this->connect->setClientIp();
+        $this->connect->setLoginIp($this->connect->getClientIp());
         #发送请求
         try {
             return $this->connect->response($this->connect->send());

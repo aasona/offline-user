@@ -39,6 +39,8 @@ class UserCenterConnect extends OperateUcenter
      */
     protected $log;
 
+    protected $ip;
+
 
     /**
      * 设置参数
@@ -58,7 +60,9 @@ class UserCenterConnect extends OperateUcenter
         }
         $this->params = array_filter($this->params);
         //城市id转换
-        $this->cityMap();
+        if(isset($this->params['city_id'])){
+            $this->cityMap();
+        }
     }
 
     /**
@@ -83,6 +87,7 @@ class UserCenterConnect extends OperateUcenter
                 throw new InvalidArgumentException('Invalid type value(city_id): '.$this->params['city_id']);
             }
             $this->params['city_id'] = $city->base_districts_id;
+            $this->params['province_id'] = $city->base_districts_province_id;
         }
     }
 
@@ -165,4 +170,37 @@ class UserCenterConnect extends OperateUcenter
         }
         return false;
     }
+
+    /**
+     * 设置ip
+     * @author:yuanHb  2020/4/30 10:28
+     */
+    public function setClientIp(){
+        if(!$this->ip == null){
+            return;
+        }
+        if(getenv('HTTP_CLIENT_IP') && strcasecmp(getenv('HTTP_CLIENT_IP'), 'unknown')) {
+            $this->ip = getenv('HTTP_CLIENT_IP');
+        } elseif(getenv('HTTP_X_FORWARDED_FOR') && strcasecmp(getenv('HTTP_X_FORWARDED_FOR'), 'unknown')) {
+            $this->ip = getenv('HTTP_X_FORWARDED_FOR');
+//        } elseif(getenv('REMOTE_ADDR') && strcasecmp(getenv('REMOTE_ADDR'), 'unknown')) {
+//            $ip = getenv('REMOTE_ADDR');
+        } elseif(isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp($_SERVER['REMOTE_ADDR'], 'unknown')) {
+            $this->ip = $_SERVER['REMOTE_ADDR'];
+        } else {
+            $this->ip = '0.0.0.0';
+        }
+        $this->ip = preg_match('/[\d\.]{7,15}/', $this->ip, $matches) ? $matches[0] : '';
+    }
+
+    /**
+     * 返回ip
+     * @return mixed
+     * @author:yuanHb  2020/4/30 10:29
+     */
+    public function getClientIp(){
+        return $this->ip;
+    }
+
+
 }
