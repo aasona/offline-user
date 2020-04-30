@@ -68,16 +68,19 @@ class OfflineUser
      */
     public function loginByUserCenter($params, $type)
     {
-        if (!\in_array(\strtolower($type), ['pwd', 'code'])) {
+        if (!\in_array(\strtolower($type), ['pwd', 'code', 'phone'])) {
             throw new InvalidArgumentException('Invalid response format: '.$type);
         }
         #请求地址设置
         switch ($type) {
-            case 'pwd' :
+            case 'pwd' : //通过密码登录
                 $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_LOGIN_BY_PWD);
                 break;
-            case 'code':
+            case 'code': //通过短信验证码登录
                 $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_LOGIN_BY_MOBILE);
+                break;
+            case 'phone': //通过手机号直接登录
+                $this->connect->setRequestUri('/api/user/mobilelogin');
                 break;
         }
         #参数设置
@@ -279,6 +282,24 @@ class OfflineUser
      */
     public function setDefaultStudentForUserCenter($params){
         $this->connect->setRequestUri('/api/student/setDefault');
+        $this->connect->setInput($params);
+        try {
+            return $this->connect->response($this->connect->send(), 'bool');
+        } catch (\Exception $exception) {
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
+    /**
+     * 绑定openid或者pushid
+     * @param $params
+     * @return array|bool
+     * @throws HttpException
+     * @throws InvalidArgumentException
+     * @author:yuanHb  2020/4/30 15:35
+     */
+    public function bindIdForUserCenter($params){
+        $this->connect->setRequestUri('api/user/bindpush');
         $this->connect->setInput($params);
         try {
             return $this->connect->response($this->connect->send(), 'bool');
