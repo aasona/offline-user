@@ -268,6 +268,26 @@ class OfflineUser
         }
     }
 
+
+    /**
+     * 设置默认学生
+     * @param $params
+     * @return array|bool
+     * @throws HttpException
+     * @throws InvalidArgumentException
+     * @author:yuanHb  2020/4/30 11:01
+     */
+    public function setDefaultStudentForUserCenter($params){
+        $this->connect->setRequestUri('/api/student/setDefault');
+        $this->connect->setInput($params);
+        try {
+            return $this->connect->response($this->connect->send(), 'bool');
+        } catch (\Exception $exception) {
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
+
     /**
      * 旧密码修改密码
      * @param $params
