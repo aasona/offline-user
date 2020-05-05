@@ -147,7 +147,11 @@ class OfflineUser
      * @author:yuanHb  2020/4/30 17:33
      */
     public function getUserByUserCenter($params){
-        $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_GET_USERINFO_BY_MOBILE);
+        if (isset($params['user_id'])) {
+            $this->connect->setRequestUri('/api/user/userinfo');
+        } else {
+            $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_GET_USERINFO_BY_MOBILE);
+        }
         $this->connect->setInput($params);
         try {
             return $this->connect->response($this->connect->send());
