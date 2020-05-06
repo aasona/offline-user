@@ -176,7 +176,7 @@ class OfflineUser
      */
     public function getStudentByUserCenter($params)
     {
-        $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::STUDENT_GET);
+        $this->connect->setRequestUri('/api/student'.\Xthk\Ucenter\UriConfig::STUDENT_GET);
         $this->connect->setInput($params);
         try {
             return $this->connect->response($this->connect->send());
