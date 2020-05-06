@@ -146,13 +146,18 @@ class OfflineUser
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/30 17:33
      */
-    public function getUserByUserCenter($params){
+    public function getUserByUserCenter($params)
+    {
         if (isset($params['user_id'])) {
+            $userId = $params['user_id'];
             $this->connect->setRequestUri('/api/user/userinfo');
         } else {
             $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_GET_USERINFO_BY_MOBILE);
         }
         $this->connect->setInput($params);
+        if (isset($userId)) {
+            $this->connect->setUserId($userId);
+        }
         try {
             return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
@@ -303,7 +308,8 @@ class OfflineUser
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/30 11:01
      */
-    public function setDefaultStudentForUserCenter($params){
+    public function setDefaultStudentForUserCenter($params)
+    {
         $this->connect->setRequestUri('/api/student/setDefault');
         $this->connect->setInput($params);
         try {
@@ -321,7 +327,8 @@ class OfflineUser
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/30 15:35
      */
-    public function bindIdForUserCenter($params){
+    public function bindIdForUserCenter($params)
+    {
         $this->connect->setRequestUri('api/user/bindpush');
         $this->connect->setInput($params);
         try {
