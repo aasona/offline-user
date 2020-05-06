@@ -231,6 +231,9 @@ class OfflineUser
         $this->connect->setRequestUri('/api/student'.\Xthk\Ucenter\UriConfig::STUDENT_UPDATE);
         $this->connect->setInput($params);
         try {
+            if(empty($this->connect->getParmas())){
+                return true;
+            }
             return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
