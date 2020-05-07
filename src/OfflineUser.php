@@ -361,6 +361,25 @@ class OfflineUser
         }
     }
 
+
+    /**
+     * 验证短信验证码
+     * @param $params
+     * @return array|bool
+     * @throws HttpException
+     * @throws InvalidArgumentException
+     * @author:yuanHb  2020/5/7 16:02
+     */
+    public function validateSmsCodeByUserCenter($params){
+        $this->connect->setRequestUri('/api/user/smscode');
+        $this->connect->setInput($params);
+        try {
+            return $this->connect->response($this->connect->send(), 'bool');
+        } catch (\Exception $exception) {
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
     /**
      * 拼接token
      * @param $userCenterToken

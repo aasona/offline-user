@@ -56,7 +56,7 @@ class UserCenterConnect extends OperateUcenter
         $configParams = $this->input->getParamsForConfig();
         //参数获取
         foreach ($configParams as $key => $configParam) {
-            $this->params[$key] = $this->input->get($configParam);
+            $this->params[$key] = $this->input->get($key) ? $this->input->get($key) : $this->input->get($configParam);
         }
         $this->params = array_filter($this->params);
         //城市id转换
