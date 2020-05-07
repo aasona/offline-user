@@ -274,6 +274,10 @@ class OfflineUser
         if (!isset($params['user_access_token'])) {
             throw new InvalidArgumentException('参数缺失');
         }
+        if(isset($params['app_name'])){ //app name
+            $this->connect->setAppName($params['app_name']);
+            unset($params['app_name']);
+        }
         $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_REFRESH_TOKEN);
         $this->connect->setUserAccessToken($params['user_access_token']);
         try {
