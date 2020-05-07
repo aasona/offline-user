@@ -50,7 +50,10 @@ class UserCenterConnect extends OperateUcenter
      */
     public function setInput(array $params)
     {
-
+        if(isset($params['app_name'])){
+            $this->setAppName($params['app_name']);
+            unset($params['app_name']);
+        }
         $this->input = new Params($params);
         //参数判断
         $configParams = $this->input->getParamsForConfig();
@@ -141,6 +144,16 @@ class UserCenterConnect extends OperateUcenter
         } else {
             return null;
         }
+    }
+
+    /**
+     * 设置appName
+     * @param $appName
+     * @author:yuanHb  2020/5/7 18:00
+     */
+    public function setAppName($appName){
+
+        $this->config['app_name'] = $appName;
     }
 
     /**
