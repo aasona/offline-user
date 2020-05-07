@@ -277,7 +277,7 @@ class OfflineUser
         $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::USER_REFRESH_TOKEN);
         $this->connect->setUserAccessToken($params['user_access_token']);
         try {
-            return $this->connect->response($this->connect->send());
+            return $this->connect->response($this->connect->send('', 'get'));
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
