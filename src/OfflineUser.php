@@ -80,7 +80,7 @@ class OfflineUser
                 $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_LOGIN_BY_MOBILE);
                 break;
             case 'phone': //通过手机号直接登录
-                $this->connect->setRequestUri('/api/user/mobilelogin');
+                $this->connect->setRequestUri('/api/user/mobileLogin');
                 break;
         }
         #参数设置
