@@ -153,6 +153,7 @@ class UserCenterConnect extends OperateUcenter
      */
     public function response($result, $type = 'array')
     {
+        \Log::info($result);
         $result = json_decode($result, true);
         if (!isset($result['status_code'])) {
             return false;
