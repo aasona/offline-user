@@ -274,7 +274,7 @@ class OfflineUser
         if (!isset($params['user_access_token'])) {
             throw new InvalidArgumentException('参数缺失');
         }
-        $this->connect->setRequestUri(\Xthk\Ucenter\UriConfig::USER_REFRESH_TOKEN);
+        $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_REFRESH_TOKEN);
         $this->connect->setUserAccessToken($params['user_access_token']);
         try {
             return $this->connect->response($this->connect->send('', 'get'));
@@ -332,7 +332,7 @@ class OfflineUser
      */
     public function bindIdForUserCenter($params)
     {
-        $this->connect->setRequestUri('api/user/bindpush');
+        $this->connect->setRequestUri('/api/user/bindpush');
         $this->connect->setInput($params);
         try {
             return $this->connect->response($this->connect->send(), 'bool');
