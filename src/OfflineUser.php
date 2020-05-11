@@ -148,8 +148,8 @@ class OfflineUser
      */
     public function getUserByUserCenter($params)
     {
-        if (isset($params['user_id'])) {
-            $userId = $params['user_id'];
+        if (isset($params['uc_user_id']) || isset($params['user_id'])) {
+            $userId = isset($params['uc_user_id']) ? $params['uc_user_id'] : $params['user_id'];
             $this->connect->setRequestUri('/api/user/userinfo');
         } else {
             $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_GET_USERINFO_BY_MOBILE);
@@ -197,8 +197,8 @@ class OfflineUser
     public function userCenterCreateStudent($params)
     {
         $this->connect->setInput($params);
-        if (isset($params['user_id'])) {
-            $userId = $params['user_id'];
+        if (isset($params['uc_user_id']) || isset($params['user_id'])) {
+            $userId = isset($params['uc_user_id']) ? $params['uc_user_id'] : $params['user_id'];
         } else {
             $userId = $this->connect->getUserIdByStudentPhone();
         }
