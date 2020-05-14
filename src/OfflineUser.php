@@ -347,19 +347,57 @@ class OfflineUser
 
 
     /**
-     * 确认使用登录密码
+     * 检查确认使用登录密码
      * @param $params
-     * @return array|bool
+     * @return array // 0 未确认, 1 使用线上, 2 使用线下, 返回值为0才弹出，否则不弹
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/5/14 13:43
      */
-    public function confirmPwd($params){
+    public function checkConfirmPwd($params){
 
         $this->connect->setRequestUri('api/user/confirmPwd');
         $this->connect->setInput($params);
         try {
-            return $this->connect->response($this->connect->send('', 'get'), 'bool');
+            return $this->connect->response($this->connect->send('', 'get'));
+        } catch (\Exception $exception) {
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
+
+    /**
+     * 设置默认密码
+     * @param $params
+     * @return array|bool
+     * @throws HttpException
+     * @throws InvalidArgumentException
+     * @author:yuanHb  2020/5/14 19:08
+     */
+    public function setDefaultPassword($params){
+        $this->connect->setRequestUri('/api/user/setpasswd');
+        $this->connect->setInput($params);
+        try {
+            return $this->connect->response($this->connect->send());
+        } catch (\Exception $exception) {
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
+
+    /**
+     * 通过用户id 更改手机号
+     * @param $params
+     * @return array|bool
+     * @throws HttpException
+     * @throws InvalidArgumentException
+     * @author:yuanHb  2020/5/14 19:10
+     */
+    public function changePhoneByUserId($params){
+        $this->connect->setRequestUri('/api/userinfo/changeMobileById');
+        $this->connect->setInput($params);
+        try {
+            return $this->connect->response($this->connect->send());
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
