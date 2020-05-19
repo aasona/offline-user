@@ -9,11 +9,11 @@ namespace Xthk\Ucenter\offline;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-    protected $defer = true;
+//    protected $defer = true;
 
     public function register()
     {
-        $this->app->singleton('offlineUser', function () {
+        $this->app->singleton(OfflineUser::class, function () {
             return new OfflineUser(config('ucenter.config'));
         });
 
