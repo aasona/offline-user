@@ -9,7 +9,7 @@ namespace Xthk\Ucenter\offline;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
-//    protected $defer = true;
+    protected $defer = true;
 
     public function register()
     {
