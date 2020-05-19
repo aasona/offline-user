@@ -9,7 +9,7 @@
 namespace Xthk\Ucenter\offline\Facades;
 
 
-class UserCenter extends Illuminate\Support\Facades\Facade
+class UserCenter extends \Illuminate\Support\Facades\Facade
 {
 
     /**
