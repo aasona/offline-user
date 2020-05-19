@@ -13,7 +13,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
 
     public function register()
     {
-        $this->app->singleton(OfflineUser::class, function () {
+        $this->app->singleton('offlineUser', function () {
             return new OfflineUser(config('ucenter.config'));
         });
 
