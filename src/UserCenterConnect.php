@@ -66,6 +66,9 @@ class UserCenterConnect extends OperateUcenter
         if(isset($this->params['city_id'])){
             $this->cityMap();
         }
+        if(isset($this->params['sms_type'])){
+            $this->smsType();
+        }
     }
 
     /**
@@ -91,6 +94,17 @@ class UserCenterConnect extends OperateUcenter
             }
             $this->params['city_id'] = $city->base_districts_id;
             $this->params['province_id'] = $city->base_districts_province_id;
+        }
+    }
+
+    /**
+     * 短信类型 处理
+     * @return string
+     * @author:yuanHb  2020/5/25 10:55
+     */
+    protected function smsType(){
+        if(in_array($this->params['sms_type'], ['reset', 'first_set'])){
+            $this->params['sms_type'] = 'forgot_password';
         }
     }
 
