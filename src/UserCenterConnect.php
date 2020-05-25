@@ -180,6 +180,7 @@ class UserCenterConnect extends OperateUcenter
      */
     public function response($result, $type = 'array')
     {
+        \Log::info('请求地址>>>' . json_encode($this->config['uri']));
         \Log::info(json_encode($this->params));
         \Log::info($result);
         $result = json_decode($result, true);
