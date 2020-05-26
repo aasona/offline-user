@@ -139,6 +139,27 @@ class OfflineUser
 
 
     /**
+     * 忘记密码
+     * @param $params
+     * @return array|bool
+     * @throws HttpException
+     * @throws InvalidArgumentException
+     * @author:yuanHb  2020/5/26 20:03
+     */
+    public function forgotPassword($params){
+        $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_FORGOT_PASSWORD);
+        $this->connect->setInput($params);
+        $this->connect->setClientIp();
+        $this->connect->setLoginIp($this->connect->getClientIp());
+        try {
+            return $this->connect->response($this->connect->send(), 'bool');
+        } catch (\Exception $exception) {
+            throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
+        }
+    }
+
+
+    /**
      * 通过手机号查询用户信息
      * @param $params
      * @return bool|array
