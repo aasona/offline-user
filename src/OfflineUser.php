@@ -399,7 +399,7 @@ class OfflineUser
         $this->connect->setRequestUri('/api/userinfo/changeMobileById');
         $this->connect->setInput($params);
         try {
-            return $this->connect->response($this->connect->send());
+            return $this->connect->response($this->connect->send(), 'bool');
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
