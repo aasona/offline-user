@@ -14,49 +14,57 @@ $ composer require ucenter/offline-user -vvv
 TODO
 * 追加配置文件 config/ucenter.php
 ```$xslt
+
 <?php
 return [
     'config' => [
-        'domain' => env('UCENTER_HOST', 'http://127.0.0.1'), //请求的域名
-        'app_id' => env('APP_ID', 1), //应用ID
-        'app_secret' => env('APP_SECRET', '123456'), //应用秘钥
-        'source' => env('SOURCE', 1), //来源
-        'app_name' => env('APP_NAME', 'web') //应用名称
+        'domain' => env('USER_CENTER_HOST', 'http://gyk.ucenter_service.debug.xthktech.cn'), //请求的域名
+        'app_id' => env('UC_APP_ID', 2), //应用ID
+        'app_secret' => env('UC_APP_SECRET', '3ff1eff4a033ca786610497fccfa5f44'), //应用秘钥
+        'source' => env('UC_SOURCE', 2), //来源
+        'app_name' => env('APP_NAME_USER_CENTER', 'web') //应用名称
     ],
 
     'params' => [
-        'mobile',
-        'password',
-        'password_confirmation',
-        'original_password',
-        'sms_code',
-        'sms_type',
-        'register_ip',
-        'login_ip',
-        'push_id',
-        'push_type',
-        'open_id',
-        'wechat_type',
-        'user_id',
-        'status',
-        'city_id',
-        'real_name',
-        'gender',
-        'birthday',
-        'emergency_mobile',
-        'student_id'
+        'mobile' => 'phone',
+        'password' => 'password',
+        'password_confirmation' => 'password_confirmation',
+        'original_password' => 'original_password',
+        'sms_code' => 'sms_code',
+        'sms_type' => 'sms_type',
+        'register_ip' => 'register_ip',
+        'login_ip' => 'login_ip',
+        'push_id' => 'push_id',
+        'push_type' => 'push_type',
+        'open_id' => 'open_id',
+        'wechat_type' => 'wechat_type',
+        'status' => 'status',
+        'city_id' => 'city_id',
+        'real_name' => 'name',
+        'gender' => 'gender',
+        'birthday' => 'birthday',
+        'emergency_mobile' => 'emergency_phone',
+        'user_id' => 'uc_user_id',
+        'student_id' => 'uc_student_id'
     ],
 
- 'model' => [
-         'CityModel' => \App\Models\Base\CityModel::class,
-         'UserCenterLogModel' => \App\Models\Mongodb\UserCenterLogsModel::class
-     ],
+    'model' => [
+        'CityModel' => \App\Models\Base\CityModel::class,
+        'UserCenterLogModel' => \App\Models\Mongodb\UserCenterLogsModel::class,
+        'StudentModel' =>  \App\Models\Student\StudentModel::class,
+    ],
+
+     //todo 暂时未使用异步方式
+    'nsq' => [
+        'topic' => 'xthk_offline_user',
+        'student_update' => '',
+    ]
 ];
 
 ```
 * 同步调用
 ```$xslt
-
+注入OfflineUser类，调用里面对应的方法
 ```
 * 异步调用
 ```$xslt
