@@ -25,7 +25,7 @@ class OfflineUser
      * 注册
      * @param $params
      * @param  string  $type
-     * @return string
+     * @return bool|array
      * @throws Exceptions\Exception
      * @throws HttpException
      * @throws InvalidArgumentException
@@ -61,7 +61,7 @@ class OfflineUser
      * 登录
      * @param $params
      * @param $type
-     * @return string
+     * @return bool|array
      * @throws Exceptions\InvalidArgumentException
      * @throws HttpException
      * @author:yuanHb  2020/4/26 15:36
@@ -99,7 +99,7 @@ class OfflineUser
     /**
      * 登出
      * @param $params
-     * @return string
+     * @return bool|array
      * @throws HttpException
      * @throws Exceptions\InvalidArgumentException
      * @author:yuanHb  2020/4/26 15:36
@@ -121,7 +121,7 @@ class OfflineUser
     /**
      * 重置密码
      * @param $params
-     * @return string
+     * @return bool
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/27 17:32
@@ -131,7 +131,7 @@ class OfflineUser
         $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::RESET_PWD);
         $this->connect->setInput($params);
         try {
-            return $this->connect->response($this->connect->send());
+            return $this->connect->response($this->connect->send(), 'bool');
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
@@ -141,7 +141,7 @@ class OfflineUser
     /**
      * 通过手机号查询用户信息
      * @param $params
-     * @return array|bool
+     * @return bool|array
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/30 17:33
@@ -169,7 +169,7 @@ class OfflineUser
     /**
      * 查询学生
      * @param $params
-     * @return string
+     * @return bool|array
      * @throws HttpException
      * @throws Exceptions\InvalidArgumentException
      * @author:yuanHb  2020/4/26 15:36
@@ -189,7 +189,7 @@ class OfflineUser
     /**
      * 新增学生
      * @param $params
-     * @return string
+     * @return bool|array
      * @throws HttpException
      * @throws Exceptions\Exception
      * @author:yuanHb  2020/4/26 15:36
@@ -220,7 +220,7 @@ class OfflineUser
     /**
      * 编辑学生
      * @param $params
-     * @return string
+     * @return bool|array
      * @throws HttpException
      * @throws Exceptions\InvalidArgumentException
      * @author:yuanHb  2020/4/26 15:36
@@ -246,7 +246,7 @@ class OfflineUser
     /**
      * 发送短信
      * @param $params
-     * @return string
+     * @return bool
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/27 19:10
@@ -266,7 +266,7 @@ class OfflineUser
     /**
      * 刷新token
      * @param $params
-     * @return string
+     * @return bool|array
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/27 19:54
@@ -292,7 +292,7 @@ class OfflineUser
     /**
      * 判断用户是否已注册
      * @param $params
-     * @return bool|mixed
+     * @return bool
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/29 0:23
@@ -312,7 +312,7 @@ class OfflineUser
     /**
      * 设置默认学生
      * @param $params
-     * @return array|bool
+     * @return bool
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/30 11:01
@@ -331,7 +331,7 @@ class OfflineUser
     /**
      * 绑定openid或者pushid
      * @param $params
-     * @return array|bool
+     * @return bool
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/30 15:35
@@ -351,7 +351,7 @@ class OfflineUser
     /**
      * 检查确认使用登录密码
      * @param $params
-     * @return array // 0 未确认, 1 使用线上, 2 使用线下, 返回值为0才弹出，否则不弹
+     * @return bool|array // 0 未确认, 1 使用线上, 2 使用线下, 返回值为0才弹出，否则不弹
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/5/14 13:43
@@ -408,7 +408,7 @@ class OfflineUser
     /**
      * 旧密码修改密码
      * @param $params
-     * @return bool|mixed
+     * @return bool|array
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/4/29 0:23
@@ -428,7 +428,7 @@ class OfflineUser
     /**
      * 验证短信验证码
      * @param $params
-     * @return array|bool
+     * @return bool
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/5/7 16:02
