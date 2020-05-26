@@ -204,6 +204,7 @@ class OfflineUser
         }
         if (!$userId) { //新增学生前这个电话号没有学生，走注册
             $this->connect->setRequestUri('/api/user/createUser');
+            $this->connect->setClientIp();
         } else {
             $this->connect->setRequestUri('/api/student'.\Xthk\Ucenter\UriConfig::STUDENT_CREATE);
             $this->connect->setUserId($userId);
