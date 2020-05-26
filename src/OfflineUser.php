@@ -203,7 +203,7 @@ class OfflineUser
             $userId = $this->connect->getUserIdByStudentPhone();
         }
         if (!$userId) { //新增学生前这个电话号没有学生，走注册
-            $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::USER_REGISTER);
+            $this->connect->setRequestUri('/api/user/createUser');
         } else {
             $this->connect->setRequestUri('/api/student'.\Xthk\Ucenter\UriConfig::STUDENT_CREATE);
             $this->connect->setUserId($userId);
