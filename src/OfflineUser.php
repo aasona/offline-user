@@ -371,7 +371,7 @@ class OfflineUser
     /**
      * 设置默认密码
      * @param $params
-     * @return array|bool
+     * @return bool
      * @throws HttpException
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/5/14 19:08
@@ -380,7 +380,7 @@ class OfflineUser
         $this->connect->setRequestUri('/api/user/setpasswd');
         $this->connect->setInput($params);
         try {
-            return $this->connect->response($this->connect->send());
+            return $this->connect->response($this->connect->send(), 'bool');
         } catch (\Exception $exception) {
             throw new HttpException($exception->getMessage(), $exception->getCode(), $exception);
         }
