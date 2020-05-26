@@ -146,7 +146,7 @@ class OfflineUser
      * @throws InvalidArgumentException
      * @author:yuanHb  2020/5/26 20:03
      */
-    public function forgotPassword($params){
+    public function forgotPasswordByUserCenter($params){
         $this->connect->setRequestUri('/api/user' . \Xthk\Ucenter\UriConfig::USER_FORGOT_PASSWORD);
         $this->connect->setInput($params);
         $this->connect->setClientIp();
