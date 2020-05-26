@@ -154,7 +154,7 @@ class UserCenterConnect extends OperateUcenter
     public function getUserIdByStudentPhone(){
         $student = $this->getStudentModel()->where('phone', $this->params['mobile'])->first();
         if($student){
-            return $student->user_id;
+            return $student->uc_user_id;
         } else {
             return null;
         }
