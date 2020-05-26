@@ -128,7 +128,7 @@ class OfflineUser
      */
     public function resetPwdForUserCenter($params)
     {
-        $this->connect->setRequestUri('/api/user'.\Xthk\Ucenter\UriConfig::RESET_PWD);
+        $this->connect->setRequestUri('/api/userinfo'.\Xthk\Ucenter\UriConfig::RESET_PWD);
         $this->connect->setInput($params);
         try {
             return $this->connect->response($this->connect->send(), 'bool');
