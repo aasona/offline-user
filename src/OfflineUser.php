@@ -215,21 +215,15 @@ class OfflineUser
      * @throws Exceptions\Exception
      * @author:yuanHb  2020/4/26 15:36
      */
-    public function userCenterCreateStudent($params)
+    public function userCenterCreateStudent($params, $type='create')
     {
         $this->connect->setInput($params);
-        if (isset($params['uc_user_id']) || isset($params['user_id'])) {
-            $userId = isset($params['uc_user_id']) ? $params['uc_user_id'] : $params['user_id'];
-        } else {
-            $userId = $this->connect->getUserIdByStudentPhone();
-        }
-        if (!$userId) { //新增学生前这个电话号没有学生，走注册
+        if($type == 'register') { //走注册
             $this->connect->setRequestUri('/api/user/createUser');
             $this->connect->setClientIp();
             $this->connect->setRegisterIp($this->connect->getClientIp());
         } else {
             $this->connect->setRequestUri('/api/student'.\Xthk\Ucenter\UriConfig::STUDENT_CREATE);
-            $this->connect->setUserId($userId);
         }
         try {
             return $this->connect->response($this->connect->send());
